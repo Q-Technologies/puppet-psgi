@@ -1,0 +1,38 @@
+{
+  "name": "qtechnologies/psgi",
+  "version": "1.0.0",
+  "author": "Q-Technologies",
+  "summary": "Puppet module to create service files for PSGI (Perl Web Server Gateway Interface) apps",
+  "license": "Apache-2.0",
+  "tags": ["psgi","Perl Web Server Gateway Interface","dancer","perl dancer"],
+  "source": "https://github.com/Q-Technologies/puppet-psgi.git",
+  "project_page": "https://github.com/Q-Technologies/puppet-psgi",
+  "issues_url": "https://github.com/Q-Technologies/puppet-psgi/issues",
+  "dependencies": [
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 4.14.0"
+    }
+  ],
+  "requirements": [
+    {
+      "name": "pe",
+      "version_requirement": ">= 3.7.0"
+    },
+    {
+      "name": "puppet",
+      "version_requirement": ">= 4.0.0"
+    }
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "SLES",
+      "operatingsystemrelease": [ 
+        "11",
+        "12"
+     ]
+    }
+  ],
+  "data_provider": "hiera"
+}
+

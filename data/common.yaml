@@ -1,0 +1,6 @@
+---
+psgi::service_dir: /etc/systemd/system
+psgi::binary: /usr/bin/plackup
+psgi::server: Starman
+psgi::environment: production
+psgi::perl5lib: /usr/local/perl/lib/perl5
