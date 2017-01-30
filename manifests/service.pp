@@ -6,7 +6,7 @@ define psgi::service (
   String    $environment     = '',
   String    $binary          = '',
   String    $server          = '',
-  Integer   $workers         = '',
+  Integer   $workers         = 0,
   String    $web_root        = '',
   String    $perl5lib        = '',
 ){
@@ -29,7 +29,7 @@ define psgi::service (
   $environment_mod = $environment ? { '' => $psgi::environment                                , default => $environment, }
   $server_mod      = $server ?      { '' => $psgi::server                                     , default => $server, }
   $binary_mod      = $binary ?      { '' => $psgi::binary                                     , default => $binary, }
-  $workers_mod     = $workers ?     { '' => $psgi::workers                                    , default => $workers, }
+  $workers_mod     = $workers ?     { 0  => $psgi::workers                                    , default => $workers, }
   $perl5lib_mod    = $perl5lib ?    { '' => $psgi::perl5lib                                   , default => $perl5lib, }
 
   $label = regsubst( $web_server_name_mod, '\.', '_', 'G' )

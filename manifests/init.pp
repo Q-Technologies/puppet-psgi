@@ -5,6 +5,7 @@ class psgi (
   String $environment,
   String $binary,
   String $server,
+  Integer $workers,
   String $perl5lib,
 
   # These class parameters are populated from global hiera data
