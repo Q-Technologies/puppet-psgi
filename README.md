@@ -55,6 +55,7 @@ It takes the following paramters:
 * `environment` - specify a different environment - defaults to production
 * `binary` - the full path to the PSGI binary (`plackup`)
 * `server` - the PSGI server to use - defaults to `Starman`
+* `workers` - the number of workers to start - defaults to `2`
 * `web_root` - specify a different web root, just for this web server name - overriding the default which is the concatenation of `$web_root_parent` and `web_server_name`
 * `perl5lib` - any additional library path to search for Perl modules
 

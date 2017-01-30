@@ -1,13 +1,14 @@
 # Defined type to a service for a PSGI application
 define psgi::service (
   # Class parameters are populated from module hiera data
-  String $web_server_name = '',
-  String $socket_dir      = '',
-  String $environment     = '',
-  String $binary          = '',
-  String $server          = '',
-  String $web_root        = '',
-  String $perl5lib        = '',
+  String    $web_server_name = '',
+  String    $socket_dir      = '',
+  String    $environment     = '',
+  String    $binary          = '',
+  String    $server          = '',
+  Integer   $workers         = '',
+  String    $web_root        = '',
+  String    $perl5lib        = '',
 ){
 
   include psgi
@@ -28,6 +29,7 @@ define psgi::service (
   $environment_mod = $environment ? { '' => $psgi::environment                                , default => $environment, }
   $server_mod      = $server ?      { '' => $psgi::server                                     , default => $server, }
   $binary_mod      = $binary ?      { '' => $psgi::binary                                     , default => $binary, }
+  $workers_mod     = $workers ?     { '' => $psgi::workers                                    , default => $workers, }
   $perl5lib_mod    = $perl5lib ?    { '' => $psgi::perl5lib                                   , default => $perl5lib, }
 
   $label = regsubst( $web_server_name_mod, '\.', '_', 'G' )
@@ -45,6 +47,7 @@ define psgi::service (
       environment     => $environment_mod,
       server          => $server_mod,
       binary          => $binary_mod,
+      workers         => $workers_mod,
       perl5lib        => $perl5lib_mod,
     } ),
   }
