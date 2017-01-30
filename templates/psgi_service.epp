@@ -2,12 +2,12 @@
 # File Managed by Puppet
 #
 [Unit]
-Description=PSGI for <%= $domain %>
+Description=PSGI for <%= $web_server_name %>
 After=network.target
 
 [Service]
 Environment=PERL5LIB=<%= $perl5lib %>
-ExecStart=<%= $binary %> -s <%= $server %> -a <%= $web_root %>/bin/app.pl -I <%= $web_root %>/lib -E <%= $environment %> -l <%= $socket_dir %>/<%= $domain %>.sock --workers=<%= $workers %> &
+ExecStart=<%= $binary %> -s <%= $server %> -a <%= $web_root %>/bin/app.pl -I <%= $web_root %>/lib -E <%= $environment %> -l <%= $socket_dir %>/<%= $web_server_name %>.sock --workers=<%= $workers %> &
 KillMode=process
 
 [Install]

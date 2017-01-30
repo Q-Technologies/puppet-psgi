@@ -7,6 +7,11 @@ It has been designed to fit in nicely with our NGINX module: [qtechnologies/ngin
 
 Currently only tested on SUSE, but other platforms should work with the right hiera data.
 
+**NB** *This module does not deploy Perl or the PSGI applications themselves - just the service file to make sure the app starts at boot and providing an easy and consistent way to start and stop it.*
+
+### Perl
+The default settings assume an OS provided Perl with some extra modules installed into a local library.  However, any Perl installation can be used, you just need to configure the correct `binary` (usually path to `plackup`) and `perl5lib` in your hiera data.
+
 ## Instructions
 ### Global Settings
 The following is the module internal hiera data - feeding the module parameters.  These defaults can be overridden, if required:
@@ -30,7 +35,7 @@ psgi::web_root_parent: /websites
 ```
 See below for a description of the parameters.
 ### Creating a PSGI systemd Service
-Simply use the `phpfpm::pool` resource, like this:
+Simply use the `psgi::service` resource, like this:
 ```puppet
 psgi::service { 'www.example.com': 
   binary => '/usr/bin/plackup',
@@ -39,18 +44,18 @@ psgi::service { 'www.example.com':
 ```
 You can also use `create_resources` if you have a hash of config items in hiera:
 ```puppet
-create_resources( psgi::service, { $domain => $config['psgi'] }, {} )
+create_resources( psgi::service, { $web_server_name => $config['psgi'] }, {} )
 ```
 
-This will create a `systemd` service for the specific domain based on the module's internal template.   
+This will create a `systemd` service for the specific web server name based on the module's internal template.
 
-It also takes the following paramters:
-* `domain` - domain name to use, otherwise use the name
-* `socket_dir` - specify a different socket directory, just for this domain - overriding what's specified in Nginx
+It takes the following paramters:
+* `web_server_name` - web server name name to use, otherwise use the resource name
+* `socket_dir` - specify a different socket directory, just for this web server name - overriding what's specified in Nginx
 * `environment` - specify a different environment - defaults to production
 * `binary` - the full path to the PSGI binary (`plackup`)
 * `server` - the PSGI server to use - defaults to `Starman`
-* `web_root` - specify a different web root, just for this domain - overriding the default which is the concatenation of `$web_root_parent` and domain name
+* `web_root` - specify a different web root, just for this web server name - overriding the default which is the concatenation of `$web_root_parent` and `web_server_name`
 * `perl5lib` - any additional library path to search for Perl modules
 
 ## Issues

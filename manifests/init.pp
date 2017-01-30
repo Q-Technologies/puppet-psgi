@@ -8,13 +8,13 @@ class psgi (
   String $perl5lib,
 
   # These class parameters are populated from global hiera data
-  String $socket_dir = $nginx::socket_dir,
+  String $socket_dir      = $nginx::socket_dir,
   String $web_root_parent = $nginx::web_root_parent,
 ){
 
   exec { 'psgi-systemctl-daemon-reload':
-    path    => $::path,
-    command => 'systemctl daemon-reload',
+    path        => $::path,
+    command     => 'systemctl daemon-reload',
     refreshonly => true,
   }
 }

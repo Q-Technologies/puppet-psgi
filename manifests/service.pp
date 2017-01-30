@@ -1,13 +1,13 @@
 # Defined type to a service for a PSGI application
 define psgi::service (
   # Class parameters are populated from module hiera data
-  String $domain     = '',
-  String $socket_dir = '',
-  String $environment = 'production',
-  String $binary = '',
-  String $server = '',
-  String $web_root = '',
-  String $perl5lib = '',
+  String $web_server_name = '',
+  String $socket_dir      = '',
+  String $environment     = '',
+  String $binary          = '',
+  String $server          = '',
+  String $web_root        = '',
+  String $perl5lib        = '',
 ){
 
   include psgi
@@ -17,46 +17,35 @@ define psgi::service (
     # Puppet won't let this happen anyway, but let's be explicit
     fail( 'Name cannot be blank' )
   }
-  if $domain == '' {
-    $domain_name = $name
+  if $web_server_name == '' {
+    $web_server_name_mod = $name
   } else {
-    $domain_name = $domain
+    $web_server_name_mod = $web_server_name
   }
 
-  $label = regsubst( $domain_name, '\.', '_', 'G' )
-  $service = "$psgi_${label}"
+  $socket_dir_mod  = $socket_dir ?  { '' => $psgi::socket_dir                                 , default => $socket_dir, }
+  $web_root_mod    = $web_root ?    { '' => "${psgi::web_root_parent}/${web_server_name_mod}" , default => $web_root, }
+  $environment_mod = $environment ? { '' => $psgi::environment                                , default => $environment, }
+  $server_mod      = $server ?      { '' => $psgi::server                                     , default => $server, }
+  $binary_mod      = $binary ?      { '' => $psgi::binary                                     , default => $binary, }
+  $perl5lib_mod    = $perl5lib ?    { '' => $psgi::perl5lib                                   , default => $perl5lib, }
+
+  $label = regsubst( $web_server_name_mod, '\.', '_', 'G' )
+  $service = "psgi_${label}"
   file { "${psgi::service_dir}/${service}.service":
-    ensure        => file,
-    owner         => 'root',
-    group         => 'root',
-    mode          => '0640',
-    notify        => Exec['psgi-systemctl-daemon-reload'],
-    content       => epp('psgi/psgi_service.epp', {
-      domain      => $domain_name,
-      socket_dir  => $socket_dir ? {
-        ''      => $psgi::socket_dir,
-        default => $socket_dir,
-      },
-      web_root    => $web_root ? {
-        ''      => "${psgi::web_root_parent}/${domain_name}",
-        default => $web_root,
-      },
-      environment => $environment ? {
-        ''      => $psgi::environment,
-        default => $environment,
-      },
-      server      => $server ? {
-        ''      => $psgi::server,
-        default => $server,
-      },
-      binary      => $binary ? {
-        ''      => $psgi::binary,
-        default => $binary,
-      },
-      perl5lib     => $perl5lib ? {
-        ''      => $psgi::perl5lib,
-        default => $perl5lib,
-      },
+    ensure  => file,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0640',
+    notify  => Exec['psgi-systemctl-daemon-reload'],
+    content => epp('psgi/psgi_service.epp', {
+      web_server_name => $web_server_name_mod,
+      socket_dir      => $socket_dir_mod,
+      web_root        => $web_root_mod,
+      environment     => $environment_mod,
+      server          => $server_mod,
+      binary          => $binary_mod,
+      perl5lib        => $perl5lib_mod,
     } ),
   }
 
