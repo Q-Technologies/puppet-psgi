@@ -73,14 +73,14 @@ define psgi::service (
       service { $service:
         ensure  => true,
         enable  => true,
-        require => File["${psgi::service_dir}/${service}.service"],
+        subscribe => File["${psgi::service_dir}/${service}.service"],
       }
     }
   } else {
     service { $service:
       ensure  => $enabled,
       enable  => $enabled,
-      require => File["${psgi::service_dir}/${service}.service"],
+      subscribe => File["${psgi::service_dir}/${service}.service"],
     }
   }
 
