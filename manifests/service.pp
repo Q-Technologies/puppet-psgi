@@ -71,15 +71,15 @@ define psgi::service (
   if $enabled == undef {
     if $environment_mod == 'production' {
       service { $service:
-        ensure  => true,
-        enable  => true,
+        ensure    => true,
+        enable    => true,
         subscribe => File["${psgi::service_dir}/${service}.service"],
       }
     }
   } else {
     service { $service:
-      ensure  => $enabled,
-      enable  => $enabled,
+      ensure    => $enabled,
+      enable    => $enabled,
       subscribe => File["${psgi::service_dir}/${service}.service"],
     }
   }
