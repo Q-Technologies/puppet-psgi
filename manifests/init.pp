@@ -7,6 +7,11 @@ class psgi (
   String $server,
   Integer $workers,
   String $perl5lib,
+  String $app_lib,
+  String $app_script,
+  String $umask,
+  String $user,
+  String $group,
 
   # These class parameters are populated from global hiera data
   String $socket_dir      = $nginx::socket_dir,

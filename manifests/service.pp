@@ -9,6 +9,12 @@ define psgi::service (
   Integer   $workers         = 0,
   String    $web_root        = '',
   String    $perl5lib        = '',
+  String    $app_lib         = '',
+  String    $app_script      = '',
+  String    $umask           = '',
+  String    $user            = '',
+  String    $group           = '',
+  Optional[Boolean]   $enabled         = undef,
 ){
 
   include psgi
@@ -31,6 +37,11 @@ define psgi::service (
   $binary_mod      = $binary ?      { '' => $psgi::binary                                     , default => $binary, }
   $workers_mod     = $workers ?     { 0  => $psgi::workers                                    , default => $workers, }
   $perl5lib_mod    = $perl5lib ?    { '' => $psgi::perl5lib                                   , default => $perl5lib, }
+  $app_lib_mod     = $app_lib ?     { '' => $psgi::app_lib                                    , default => $app_lib, }
+  $app_script_mod  = $app_script ?  { '' => $psgi::app_script                                 , default => $app_script, }
+  $umask_mod       = $umask ?       { '' => $psgi::umask                                      , default => $umask, }
+  $user_mod        = $user ?        { '' => $psgi::user                                       , default => $user, }
+  $group_mod       = $group ?       { '' => $psgi::group                                      , default => $group, }
 
   $label = regsubst( $web_server_name_mod, '\.', '_', 'G' )
   $service = "psgi_${label}"
@@ -49,7 +60,28 @@ define psgi::service (
       binary          => $binary_mod,
       workers         => $workers_mod,
       perl5lib        => $perl5lib_mod,
+      app_lib         => $app_lib_mod,
+      app_script      => $app_script_mod,
+      umask           => $umask_mod,
+      user            => $user_mod,
+      group           => $group_mod,
     } ),
+  }
+
+  if $enabled == undef {
+    if $environment_mod == 'production' {
+      service { $service:
+        ensure  => true,
+        enable  => true,
+        require => File["${psgi::service_dir}/${service}.service"],
+      }
+    }
+  } else {
+    service { $service:
+      ensure  => $enabled,
+      enable  => $enabled,
+      require => File["${psgi::service_dir}/${service}.service"],
+    }
   }
 
 

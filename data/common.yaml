@@ -5,3 +5,9 @@ psgi::server: Starman
 psgi::environment: production
 psgi::workers: 2
 psgi::perl5lib: /usr/local/perl/lib/perl5
+psgi::app_lib: lib
+psgi::app_script: bin/app.pl
+psgi::umask: '000'
+psgi::user: 'root'
+psgi::group: 'root'
+
