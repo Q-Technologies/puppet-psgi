@@ -1,6 +1,6 @@
 {
   "name": "qtechnologies/psgi",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Q-Technologies",
   "summary": "Puppet module to create service files for PSGI (Perl Web Server Gateway Interface) apps",
   "license": "Apache-2.0",
