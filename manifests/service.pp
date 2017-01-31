@@ -3,7 +3,7 @@ define psgi::service (
   # Class parameters are populated from module hiera data
   String    $web_server_name = '',
   String    $socket_dir      = '',
-  String    $environment     = '',
+  String    $app_environment = '',
   String    $binary          = '',
   String    $server          = '',
   Integer   $workers         = 0,
@@ -30,18 +30,18 @@ define psgi::service (
     $web_server_name_mod = $web_server_name
   }
 
-  $socket_dir_mod  = $socket_dir ?  { '' => $psgi::socket_dir                                 , default => $socket_dir, }
-  $web_root_mod    = $web_root ?    { '' => "${psgi::web_root_parent}/${web_server_name_mod}" , default => $web_root, }
-  $environment_mod = $environment ? { '' => $psgi::environment                                , default => $environment, }
-  $server_mod      = $server ?      { '' => $psgi::server                                     , default => $server, }
-  $binary_mod      = $binary ?      { '' => $psgi::binary                                     , default => $binary, }
-  $workers_mod     = $workers ?     { 0  => $psgi::workers                                    , default => $workers, }
-  $perl5lib_mod    = $perl5lib ?    { '' => $psgi::perl5lib                                   , default => $perl5lib, }
-  $app_lib_mod     = $app_lib ?     { '' => $psgi::app_lib                                    , default => $app_lib, }
-  $app_script_mod  = $app_script ?  { '' => $psgi::app_script                                 , default => $app_script, }
-  $umask_mod       = $umask ?       { '' => $psgi::umask                                      , default => $umask, }
-  $user_mod        = $user ?        { '' => $psgi::user                                       , default => $user, }
-  $group_mod       = $group ?       { '' => $psgi::group                                      , default => $group, }
+  $socket_dir_mod      = $socket_dir ?      { '' => $psgi::socket_dir                                 , default => $socket_dir, }
+  $web_root_mod        = $web_root ?        { '' => "${psgi::web_root_parent}/${web_server_name_mod}" , default => $web_root, }
+  $app_environment_mod = $app_environment ? { '' => $psgi::app_environment                            , default => $app_environment, }
+  $server_mod          = $server ?          { '' => $psgi::server                                     , default => $server, }
+  $binary_mod          = $binary ?          { '' => $psgi::binary                                     , default => $binary, }
+  $workers_mod         = $workers ?         { 0  => $psgi::workers                                    , default => $workers, }
+  $perl5lib_mod        = $perl5lib ?        { '' => $psgi::perl5lib                                   , default => $perl5lib, }
+  $app_lib_mod         = $app_lib ?         { '' => $psgi::app_lib                                    , default => $app_lib, }
+  $app_script_mod      = $app_script ?      { '' => $psgi::app_script                                 , default => $app_script, }
+  $umask_mod           = $umask ?           { '' => $psgi::umask                                      , default => $umask, }
+  $user_mod            = $user ?            { '' => $psgi::user                                       , default => $user, }
+  $group_mod           = $group ?           { '' => $psgi::group                                      , default => $group, }
 
   $label = regsubst( $web_server_name_mod, '\.', '_', 'G' )
   $service = "psgi_${label}"
@@ -55,7 +55,7 @@ define psgi::service (
       web_server_name => $web_server_name_mod,
       socket_dir      => $socket_dir_mod,
       web_root        => $web_root_mod,
-      environment     => $environment_mod,
+      app_environment => $app_environment_mod,
       server          => $server_mod,
       binary          => $binary_mod,
       workers         => $workers_mod,
@@ -69,7 +69,7 @@ define psgi::service (
   }
 
   if $enabled == undef {
-    if $environment_mod == 'production' {
+    if $app_environment_mod == 'production' {
       service { $service:
         ensure    => true,
         enable    => true,

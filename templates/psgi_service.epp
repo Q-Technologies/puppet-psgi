@@ -10,7 +10,7 @@ Environment=PERL5LIB=<%= $perl5lib %>
 UMask=<%= $umask %>
 User=<%= $user %>
 Group=<%= $group %>
-ExecStart=<%= $binary %> -s <%= $server %> -a <%= $web_root %>/<%= $app_script %> -I <%= $web_root %>/<%= $app_lib %> -E <%= $environment %> -l <%= $socket_dir %>/<%= $web_server_name %>.sock --workers=<%= $workers %>
+ExecStart=<%= $binary %> -s <%= $server %> -a <%= $web_root %>/<%= $app_script %> -I <%= $web_root %>/<%= $app_lib %> -E <%= $app_environment %> -l <%= $socket_dir %>/<%= $web_server_name %>.sock --workers=<%= $workers %>
 KillMode=process
 
 [Install]

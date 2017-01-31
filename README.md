@@ -19,7 +19,7 @@ The following is the module internal hiera data - feeding the module parameters.
 psgi::service_dir: /etc/systemd/system
 psgi::binary: /usr/bin/plackup
 psgi::server: Starman
-psgi::environment: production
+psgi::app_environment: production
 psgi::perl5lib: /usr/local/perl/lib/perl5
 psgi::app_lib: lib
 psgi::app_script: bin/app.pl
@@ -59,7 +59,7 @@ This will create a `systemd` service for the specific web server name based on t
 It takes the following paramters:
 * `web_server_name` - web server name name to use (*i.e. the domain name you are serving on*), otherwise use the resource name
 * `socket_dir` - specify a different socket directory, just for this web server name - overriding what's specified in Nginx
-* `environment` - specify a different environment - defaults to production
+* `app_environment` - specify a different application deployment environment - defaults to production
 * `binary` - the full path to the PSGI binary (`plackup`)
 * `server` - the PSGI server to use - defaults to `Starman`
 * `workers` - the number of workers to start - defaults to `2`

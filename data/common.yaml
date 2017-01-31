@@ -2,7 +2,7 @@
 psgi::service_dir: /etc/systemd/system
 psgi::binary: /usr/bin/plackup
 psgi::server: Starman
-psgi::environment: production
+psgi::app_environment: production
 psgi::workers: 2
 psgi::perl5lib: /usr/local/perl/lib/perl5
 psgi::app_lib: lib

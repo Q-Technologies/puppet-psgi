@@ -2,7 +2,7 @@
 class psgi (
   # Class parameters are populated from module hiera data - but can be overridden by global hiera
   String $service_dir,
-  String $environment,
+  String $app_environment,
   String $binary,
   String $server,
   Integer $workers,
