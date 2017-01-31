@@ -23,7 +23,7 @@ psgi::environment: production
 psgi::perl5lib: /usr/local/perl/lib/perl5
 psgi::app_lib: lib
 psgi::app_script: bin/app.pl
-psgi::umask: '000'
+psgi::umask: '0077'
 psgi::user: 'root'
 psgi::group: 'root'
 ```
