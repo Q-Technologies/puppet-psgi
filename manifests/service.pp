@@ -6,7 +6,6 @@ define psgi::service (
   String    $app_environment = '',
   String    $binary          = '',
   String    $server          = '',
-  Integer   $workers         = 0,
   String    $web_root        = '',
   String    $perl5lib        = '',
   String    $app_lib         = '',
@@ -14,7 +13,10 @@ define psgi::service (
   String    $umask           = '',
   String    $user            = '',
   String    $group           = '',
-  Optional[Boolean]   $enabled         = undef,
+  Optional[Integer] $workers = undef,
+  Optional[Boolean] $start_service = undef,
+  Optional[Boolean] $enable_service = undef,
+  Data $options = {},
 ){
 
   include psgi
@@ -30,18 +32,20 @@ define psgi::service (
     $web_server_name_mod = $web_server_name
   }
 
-  $socket_dir_mod      = $socket_dir ?      { '' => $psgi::socket_dir                                 , default => $socket_dir, }
-  $web_root_mod        = $web_root ?        { '' => "${psgi::web_root_parent}/${web_server_name_mod}" , default => $web_root, }
-  $app_environment_mod = $app_environment ? { '' => $psgi::app_environment                            , default => $app_environment, }
-  $server_mod          = $server ?          { '' => $psgi::server                                     , default => $server, }
-  $binary_mod          = $binary ?          { '' => $psgi::binary                                     , default => $binary, }
-  $workers_mod         = $workers ?         { 0  => $psgi::workers                                    , default => $workers, }
-  $perl5lib_mod        = $perl5lib ?        { '' => $psgi::perl5lib                                   , default => $perl5lib, }
-  $app_lib_mod         = $app_lib ?         { '' => $psgi::app_lib                                    , default => $app_lib, }
-  $app_script_mod      = $app_script ?      { '' => $psgi::app_script                                 , default => $app_script, }
-  $umask_mod           = $umask ?           { '' => $psgi::umask                                      , default => $umask, }
-  $user_mod            = $user ?            { '' => $psgi::user                                       , default => $user, }
-  $group_mod           = $group ?           { '' => $psgi::group                                      , default => $group, }
+  $socket_dir_mod      = pick( $options['socket_dir'], $socket_dir, $psgi::socket_dir )
+  $web_root_mod        = pick( $options['web_root'], $web_root, "${psgi::web_root_parent}/${web_server_name_mod}")
+  $app_environment_mod = pick( $options['app_environment'], $app_environment, $psgi::app_environment )
+  $server_mod          = pick( $options['server'], $server, $psgi::server )
+  $binary_mod          = pick( $options['binary'], $binary, $psgi::binary )
+  $workers_mod         = pick( $options['workers'], $workers, $psgi::workers )
+  $perl5lib_mod        = pick( $options['perl5lib'], $perl5lib, $psgi::perl5lib )
+  $app_lib_mod         = pick( $options['app_lib'], $app_lib, $psgi::app_lib )
+  $app_script_mod      = pick( $options['app_script'], $app_script, $psgi::app_script )
+  $umask_mod           = pick( $options['umask'], $umask, $psgi::umask )
+  $user_mod            = pick( $options['user'], $user, $psgi::user )
+  $group_mod           = pick( $options['group'], $group, $psgi::group )
+  $start_service_mod   = pick( $options['start_service'], $start_service, $psgi::start_service )
+  $enable_service_mod  = pick( $options['enable_service'], $enable_service, $psgi::enable_service )
 
   $label = regsubst( $web_server_name_mod, '\.', '_', 'G' )
   $service = "psgi_${label}"
@@ -68,18 +72,10 @@ define psgi::service (
     } ),
   }
 
-  if $enabled == undef {
-    if $app_environment_mod == 'production' {
-      service { $service:
-        ensure    => true,
-        enable    => true,
-        subscribe => File["${psgi::service_dir}/${service}.service"],
-      }
-    }
-  } else {
+  if $start_service_mod or $enable_service_mod {
     service { $service:
-      ensure    => $enabled,
-      enable    => $enabled,
+      ensure    => $start_service_mod,
+      enable    => $enable_service_mod,
       subscribe => File["${psgi::service_dir}/${service}.service"],
     }
   }

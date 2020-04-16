@@ -1,5 +1,7 @@
 ---
 psgi::service_dir: /etc/systemd/system
+psgi::start_service: false
+psgi::enable_service: false
 psgi::binary: /usr/bin/plackup
 psgi::server: Starman
 psgi::app_environment: production
