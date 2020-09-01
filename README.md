@@ -73,6 +73,5 @@ It takes the following paramters:
 * `group` - the group to run the PSGI application as.  Defaults to `root`.
 
 ## Issues
-This module is using hiera data that is embedded in the module rather than using a params class.  This may not play nicely with other modules using the same technique unless you are using hiera 3.0.6 and above (PE 2015.3.2+).
 
 It has only been tested on SUSE systems, using SUSE paths - patches for other platforms are welcome - we just need to create internal hiera data for the OS family.
